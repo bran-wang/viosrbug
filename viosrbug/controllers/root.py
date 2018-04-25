@@ -1,0 +1,27 @@
+from pecan import expose, redirect
+from webob.exc import status_map
+
+from viosrbug.controllers.v1 import bug
+from viosrbug.controllers.v1 import user
+
+
+class RootController(object):
+    bug = bug.BugController()
+    user = user.UsersController()
+
+    @expose(generic=True, template='index.html')
+    def index(self):
+        return dict()
+
+    @index.when(method='POST')
+    def index_post(self, q):
+        redirect('https://pecan.readthedocs.io/en/latest/search.html?q=%s' % q)
+
+    @expose('error.html')
+    def error(self, status):
+        try:
+            status = int(status)
+        except ValueError:  # pragma: no cover
+            status = 500
+        message = getattr(status_map.get(status), 'explanation', '')
+        return dict(status=status, message=message)

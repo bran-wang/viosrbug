@@ -1,0 +1,4 @@
+pecan
+wsme
+SQLAlchemy<1.1.0,>=0.9.9
+MySQL-python
